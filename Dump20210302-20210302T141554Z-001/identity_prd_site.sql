@@ -1,0 +1,68 @@
+-- MySQL dump 10.13  Distrib 8.0.21, for Win64 (x86_64)
+--
+-- Host: 127.0.0.1    Database: identity
+-- ------------------------------------------------------
+-- Server version	8.0.21
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `prd_site`
+--
+
+DROP TABLE IF EXISTS `prd_site`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `prd_site` (
+  `Id` varchar(36) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` longtext,
+  `delete_flag` tinyint DEFAULT '0',
+  `created_by` char(64) DEFAULT NULL,
+  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated_by` char(64) DEFAULT NULL,
+  `siteId` char(64) DEFAULT NULL,
+  `last_update_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `domain` varchar(150) DEFAULT NULL,
+  `application_id` varchar(64) DEFAULT NULL,
+  `company_id` varchar(64) DEFAULT NULL,
+  `parentId` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK_03d5c11035387a7457ba0311a19` (`application_id`),
+  KEY `FK_53ec6e1d6f4a4c07f287449e14e` (`company_id`),
+  KEY `FK_a5f2d59579546ed15e317838cf9` (`parentId`),
+  CONSTRAINT `FK_03d5c11035387a7457ba0311a19` FOREIGN KEY (`application_id`) REFERENCES `prd_application` (`Id`),
+  CONSTRAINT `FK_53ec6e1d6f4a4c07f287449e14e` FOREIGN KEY (`company_id`) REFERENCES `prd_company` (`Id`),
+  CONSTRAINT `FK_a5f2d59579546ed15e317838cf9` FOREIGN KEY (`parentId`) REFERENCES `prd_site` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `prd_site`
+--
+
+LOCK TABLES `prd_site` WRITE;
+/*!40000 ALTER TABLE `prd_site` DISABLE KEYS */;
+INSERT INTO `prd_site` VALUES ('05c3557d-d250-4e38-bc8b-206f24d51ea8',NULL,NULL,0,NULL,'2020-12-18 13:37:51',NULL,NULL,'2020-12-18 13:37:51',NULL,'ae91d787-7c0c-4f98-9956-93139a0f6cf2','0b645806-88d7-46f1-9236-d8b7ee8e9e3b',NULL),('978c5fe6-ba22-4c0c-90d0-b3638231dced',NULL,NULL,0,NULL,'2020-12-18 13:46:22',NULL,NULL,'2020-12-18 13:46:22',NULL,'ae91d787-7c0c-4f98-9956-93139a0f6cf2','d3134f0e-9094-4a7e-8963-6b8bd5bfe2d8',NULL),('a8544b1e-d487-4984-bae7-1c24e1360e2e','domain 3s.localhost',NULL,0,NULL,'2020-12-18 13:48:48',NULL,NULL,'2021-01-24 02:11:13','3s.localhost','ae91d787-7c0c-4f98-9956-93139a0f6cf2','c7f69e9c-4d0c-4b37-a0be-574ba8783678',NULL),('a8544b1e-d487-4984-bae7-1c24e1360ees','3S House keeping','string',0,NULL,'2020-12-05 15:07:08',NULL,NULL,'2021-01-24 02:11:12','3s.housekeeping.com','ae91d787-7c0c-4f98-9956-93139a0f6cf2','2204d44a-88d1-4187-a8cf-a1b352263f3e',NULL),('b51aa9a2-fd38-48ff-ab63-cd9fa33a721b',NULL,NULL,0,NULL,'2020-12-18 12:57:03',NULL,NULL,'2020-12-18 12:57:03',NULL,'ae91d787-7c0c-4f98-9956-93139a0f6cf2','06481330-2bf6-45ac-adff-5e52824f75e4',NULL),('c83dcc0e-5fd7-4f9a-822d-c0d53bfef8c2',NULL,NULL,0,NULL,'2020-12-18 13:34:59',NULL,NULL,'2020-12-18 13:34:59',NULL,'ae91d787-7c0c-4f98-9956-93139a0f6cf2','fa5699d3-78c0-44ce-ab62-9a4c92b6351e',NULL);
+/*!40000 ALTER TABLE `prd_site` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-03-02 20:02:10

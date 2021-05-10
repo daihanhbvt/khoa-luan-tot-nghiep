@@ -1,0 +1,22 @@
+<div></div>
+<div>
+  <div *ngFor="let column of columns">
+    <div *ngIf="column !== 'id'">
+      <div *ngIf="properties[column].type==='boolean'">
+        <mat-checkbox class="example-margin" [(ngModel)]="dataSource[column]">
+          {{properties[column]?.alias}}
+        </mat-checkbox>
+      </div>
+      <div *ngIf="properties[column].type!=='boolean'">
+        <mat-form-field>
+          <mat-label> {{properties[column].alias}}</mat-label>
+          <input matInput [(ngModel)]="dataSource[column]">
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Đóng</button>
+  <button mat-button cdkFocusInitial (click)="create()">Lưu</button>
+</div>

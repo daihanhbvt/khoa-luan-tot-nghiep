@@ -1,0 +1,112 @@
+<!-- <p>login works!</p>
+<div class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Tên đăng nhập</mat-label>
+    <input matInput [(ngModel)]="username">
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Mật khẩu</mat-label>
+    <input matInput type="password" [(ngModel)]="password">
+  </mat-form-field>
+  <button mat-button (click)="login()">Đăng nhập</button>
+</div>
+
+
+<a [routerLink]="['/authentication/forgot-password']"> Lấy lại mật khẩu</a>
+<a [routerLink]="['/authentication/register']"> Đăng ký </a> -->
+
+
+
+<div data-spy="scroll" data-target=".fixed-top" data-new-gr-c-s-check-loaded="14.991.0" data-gr-ext-installed=""><a
+    href=" /body" class="back-to-top page-scroll">Back to Top</a>
+
+  <!-- Preloader -->
+  <div class="spinner-wrapper" style="display: none;">
+    <div class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+  </div>
+  <!-- end of preloader -->
+
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+
+      <!-- Text Logo - Use this if you don't have a graphic logo -->
+      <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Tivo</a> -->
+
+      <!-- Image Logo -->
+      <a class="navbar-brand logo-image text-decoration-none white" href="/landing"
+        routerLinkActive="router-link-active"> HouseKeeping</a>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-awesome fas fa-bars"></span>
+        <span class="navbar-toggler-awesome fas fa-times"></span>
+      </button>
+      <!-- end of mobile menu toggle button -->
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav ml-auto">
+        </ul>
+        <span class="nav-item">
+          <a class="btn-outline-sm" href="/authentication/login">Đăng nhập</a>
+        </span>
+      </div>
+    </div>
+  </nav> <!-- end of navbar -->
+  <!-- end of navigation -->
+
+
+  <!-- Header -->
+  <header id="header" class="ex-2-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>Đăng ký tài khoản</h1>
+          <!-- Sign Up Form -->
+          <div class="form-container">
+            <div id="logInForm" data-toggle="validator" data-focus="false" novalidate="true">
+              <div class="form-group has-error has-danger">
+                <input type="text" class="form-control-input" [(ngModel)]="username" id="lusername" required="">
+                <label class="label-control" for="lusername">Tên đăng nhập</label>
+              </div>
+              <div class="form-group has-error has-danger">
+                <input type="email" class="form-control-input" [(ngModel)]="email" id="lemail" required="">
+                <label class="label-control" for="lemail">Email</label>
+              </div>
+              <div class="form-group has-error has-danger">
+                <input type="text" class="form-control-input" [(ngModel)]="phone" id="lphone" required="">
+                <label class="label-control" for="lphone">Số điện thoại</label>
+              </div>
+              <div class="form-group has-error has-danger">
+                <input type="text" class="form-control-input" [(ngModel)]="company" id="lcompany" required="">
+                <label class="label-control" for="lcompany">Tên công ty</label>
+              </div>
+              <div class="form-group has-error has-danger">
+                <input type="text" [(ngModel)]="password" class="form-control-input" id="lpassword" required="">
+                <label class="label-control" for="lpassword">Mật khẩu</label>
+              </div>
+
+              <div class="form-group">
+                <button class="form-control-submit-button disabled" (click)="login()">Đăng ký</button>
+              </div>
+              <div class="form-message">
+                <div id="lmsgSubmit" class="h3 text-center hidden"></div>
+              </div>
+
+            </div>
+          </div> <!-- end of form container -->
+          <!-- end of sign up form -->
+
+        </div> <!-- end of col -->
+      </div> <!-- end of row -->
+    </div> <!-- end of container -->
+  </header> <!-- end of ex-header -->
+  <!-- end of header -->
+</div>

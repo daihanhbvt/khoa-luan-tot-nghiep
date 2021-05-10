@@ -1,0 +1,33 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <div class="twoButton">
+      <button mat-button> <a class="bgr-title2" [routerLink]="['/admin/hotel']"> Admin </a></button>
+      <button mat-button class="bgr-title">Manager</button>
+    </div>
+    <span class="example-spacer"></span>
+    <span [routerLink]="['/landing']">HouseKeeping</span>
+    <span class="example-spacer"></span>
+    <button mat-button *ngIf="user">{{user.name}}</button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="inline">
+  <div class="sidebar">
+    <div class="mat-list" id="myDIV">
+      <div class="mat-list-item" [routerLink]="['/manager/schedule-job']" [routerLinkActive]="['is-active']">Phòng</div>
+      <div class="mat-list-item" [routerLink]="['/manager/public-job']" [routerLinkActive]="['is-active']"> Khu vực
+        công cộng </div>
+      <div class="mat-list-item" [routerLink]="['/manager/assignment']" [routerLinkActive]="['is-active']"> Phân
+        công công việc </div>
+      <div class="mat-list-item" [routerLink]="['/manager/booked']" [routerLinkActive]="['is-active']"> Book phòng
+      </div>
+      <div class="mat-list-item" [routerLink]="['/manager/employee']" [routerLinkActive]="['is-active']"> Danh sách
+        nhân viên </div>
+    </div>
+  </div>
+  <div class="w-100">
+    <router-outlet></router-outlet>
+  </div>
+</div>

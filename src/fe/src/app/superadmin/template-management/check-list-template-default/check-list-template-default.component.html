@@ -1,0 +1,46 @@
+<p></p>
+<div>
+  <button mat-button (click)="openDialog()" color="primary">
+    <mat-icon aria-hidden="false" aria-label="Example home icon">add_circle_outline</mat-icon>
+  </button>
+</div>
+<div *ngIf="columnsToDisplay">
+  <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+    <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+      <th mat-header-cell *matHeaderCellDef> {{properties[column]?.alias}}  </th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="column !== 'action'">
+          <span *ngIf="column === 'id'">
+            {{  element[column]?.slice(0, 7)}}
+          </span>
+          <span *ngIf="column !== 'id'">
+           
+            <div *ngIf="!properties[column]?.relationship">
+                {{  element[column]}}
+            </div>
+             <div *ngIf="properties[column]?.relationship">
+                {{  element[properties[column]?.relationship.replace('-', '_')]?.name}}
+            </div>
+          </span>
+
+        </div>
+        <div *ngIf="column === 'action'">
+          <button mat-stroked-button [routerLink]="['../check-list-template-default-item', element.id]">Items</button>
+          <button mat-stroked-button (click)="openDialog(element)" color="">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">construction</mat-icon>
+          </button>
+          <button mat-stroked-button (click)="confirmDialog(element)" color="warn">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">delete_forever</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+    </tr>
+
+  </table>
+</div>

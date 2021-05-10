@@ -1,0 +1,7 @@
+<p>Danh sách nhân viên</p>
+<mat-selection-list [(ngModel)]="employeeSelected" (selectionChange)="selectionChange($event)" multiple="false">
+  <mat-list-option *ngFor="let nv of employees" [value]="nv">
+    <div mat-line><small>{{nv.id.slice(0, 5) }} </small></div>
+    <div mat-line>{{nv.name}}</div>
+  </mat-list-option>
+</mat-selection-list>

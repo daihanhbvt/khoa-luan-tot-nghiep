@@ -1,0 +1,58 @@
+<div></div>
+<div class="a">
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Khách sạn</mat-label>
+    <mat-select [(value)]="hotelId" (selectionChange)="loadFloors()" >
+      <mat-option *ngFor="let food of hotels" [value]="food.id">
+        {{food.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="choose" appearance="fill">
+    <mat-label>Tầng</mat-label>
+    <mat-select [(value)]="floorsId" (selectionChange)="loadRef( )">
+      <mat-option *ngFor="let food of floors" [value]="food.id">
+        {{food.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngFor="let column of columns">
+    <div *ngIf="column !== 'id'">
+      <div *ngIf="properties[column].relationship">
+        <div *ngIf="properties[column].datasource">
+          <mat-form-field appearance="fill">
+            <mat-label> {{properties[column].alias}}</mat-label>
+            <mat-select [(ngModel)]="dataSource[column]">
+              <mat-option *ngFor="let food of properties[column].datasource" [value]="food.id">
+                {{food.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div *ngIf="!properties[column].relationship">
+        <div *ngIf="properties[column].type=='date'">
+          <mat-form-field appearance="fill">
+            <mat-label> {{properties[column].alias}}</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="dataSource[column]">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div *ngIf="properties[column].type!='date'">
+          <mat-form-field>
+            <mat-label> {{properties[column].alias}}</mat-label>
+            <input matInput [(ngModel)]="dataSource[column]">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="b" mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Đóng</button>
+  <button mat-button cdkFocusInitial (click)="create()">Lưu</button>
+</div>

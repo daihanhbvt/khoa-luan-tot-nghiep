@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+  <!-- jQuery and JS bundle w/ Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+  </script>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- Button trigger modal -->
+
+  <div div class="d-flex justify-content-end justify-content-end">
+    <input type="text" id="txtSearch" onchange="search()">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="idCreateAction"
+      onclick="initCreateForm()">
+
+      <em class="fa fa-plus"></em> Create
+    </button>
+  </div>
+  <!-- Table data  -->
+  <table class="table" id="address" aria-describedby="">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-end">
+    row per page
+    <select id="row_per_page" class="form-control" style="width:150px">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+      <option value="500">500</option>
+    </select>
+  </div>
+  <div id="curentPage" style="display: none;"></div>
+  <div id="pageSize" style="display: none;"></div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination  justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div id="flag" style="display: none;"></div>
+          <div id="row_id" style="display: none;"></div>
+          <div id="form_data"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="close_model">Close</button>
+          <button type="button" class="btn btn-primary" onclick="save()" id="save-change">Save
+            changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const hkm_api = "http://localhost:3001";
+    const table_properties_api = `${hkm_api}/tableProperties`;
+    getDataConfig();
+
+    function getDataConfig() {
+      let tableName = getTableName();
+      getProperties(tableName);
+
+    }
+
+    function getTableName() {
+      let pathname = location.pathname;
+      let filename = pathname.split('/')[pathname.split('/').length - 1];
+      let tablename = filename.split('.')[0];
+      return tablename;
+    }
+
+    function getProperties(tableName) {
+      let xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+          // set properties models
+          addressModel = JSON.parse(this.responseText).data;
+          // set column name
+          columns = Object.keys(addressModel.properties);
+
+          var apiPath = addressModel.apiPath;
+          console.log(apiPath);
+          // get data table
+          getDataTable(apiPath);
+
+        }
+      };
+      xhttp.open("GET", `${table_properties_api}/${tableName}`, true);
+      xhttp.setRequestHeader("site_id", "a8544b1e-d487-4984-bae7-1c24e1360e2e");
+      xhttp.send();
+    }
+
+
+    // #region Restful api
+
+    function getDataTable(apiPath) {
+      let xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(this.responseText);
+          addresses = JSON.parse(this.responseText).data;
+
+          generateTable();
+
+
+        }
+      }
+      // http://localhost:3001/cleanStatus/all
+      xhttp.open("GET", `${hkm_api}/${apiPath}/all`, true);
+      xhttp.setRequestHeader("site_id", "a8544b1e-d487-4984-bae7-1c24e1360e2e");
+      xhttp.send();
+    }
+
+    function requestPOST() {
+
+    }
+
+    function requestPUT() {
+
+    }
+
+    function requestDELETE() {
+
+    }
+
+    // #endregion
+
+    const FLAGS = {
+      "Create": 0,
+      "Remove": 2,
+      "Update": 1
+    }
+
+    var stateModel = {
+      "title": "Country",
+      "type": "object",
+      "properties": {
+        "id": {
+          "alias": "Id",
+          "type": "string",
+          "description": "Id of Country"
+        },
+        "name": {
+          "alias": "Name",
+          "type": "string",
+          "description": "Name of Country"
+        }
+      }
+    }
+
+    var countryModel = {
+      "title": "Country",
+      "type": "object",
+      "properties": {
+        "id": {
+          "alias": "Id",
+          "type": "string",
+          "description": "Id of Country"
+        },
+        "name": {
+          "alias": "Name",
+          "type": "string",
+          "description": "Name of Country"
+        }
+      }
+    }
+
+    var countries = [{
+      id: 1,
+      name: "VN",
+    }, {
+      id: 2,
+      name: "EN",
+    }]
+
+    var states = [{
+      id: 1,
+      name: "st1",
+    }, {
+      id: 2,
+      name: "st2",
+    }]
+
+    var addressModel = {
+      "title": "Address",
+      "type": "object",
+      "properties": {
+        "firstname": {
+          "alias": "First Name",
+          "type": "string",
+          "description": "First name of the recipient"
+        },
+        "lastname": {
+          "alias": "Last Name",
+          "type": "string",
+          "description": "Last name of the recipient"
+        },
+        "address1": {
+          "alias": "Address 1",
+          "type": "string",
+          "description": "First line of address"
+        },
+        "address2": {
+          "alias": "Address 2",
+          "type": "string",
+          "default": "",
+          "description": "Second line of address"
+        },
+        "zipcode": {
+          "alias": "ZipCode",
+          "type": "string",
+          "description": "Zipcode"
+        },
+        "city": {
+          "alias": "City",
+          "type": "string",
+          "description": "City name"
+        },
+        "state": {
+          "alias": "State",
+          "type": "string",
+          "description": "State name",
+          "$ref": "State"
+        },
+        "country": {
+          "alias": "Country",
+          "$ref": "Country"
+        },
+        "phone": {
+          "alias": "Phone",
+          "type": "string",
+          "description": "Phone number"
+        }
+      },
+      "required": [
+        "address1",
+        "city",
+        "country"
+      ]
+    };
+
+    var columns = Object.keys(addressModel.properties);
+    var addresses = [];
+
+    function getData(column) {
+      switch (column) {
+        case "country":
+          return countries;
+        case "state":
+          return states;
+        default:
+          return addresses;
+      }
+    }
+
+    function getDataModel(column) {
+      switch (column) {
+        case "country":
+          return countryModel;
+        case "state":
+          return stateModel;
+        default:
+          return addressModel;
+      }
+    }
+
+
+
+    function fetchData() {
+      let obj = {};
+      for (let c = 0; c < columns.length; c++) {
+        obj[columns[c]] = `${columns[c]}_Thu Nhàn Hiếu `;
+      }
+      addresses.push(obj);
+      // 1 dữ liệu lớn, 
+      // 2 là mạng chậm => load data từ server lâu
+      for (let i = 0; i < 20000; i++) {
+        let obj = {};
+        for (let c = 0; c < columns.length; c++) {
+          obj[columns[c]] = `${columns[c]}_${(i + 1) % 10}`;
+        }
+        addresses.push(obj);
+      }
+    }
+
+    // tách hàm nếu có thể tách
+
+    /**
+     * column: column name
+     */
+    function createSelect(column) {
+
+      let data = getData(column);
+      let model = getDataModel(column);
+
+      let select = document.createElement('select');
+
+      select.className = "form-control";
+      select.setAttribute("id", column);
+
+      let columns = Object.keys(model.properties);
+
+      for (let i = 0; i < data.length; i++) {
+        obj = data[i];
+        let option = document.createElement('option');
+        option.setAttribute('value', obj[columns[0]]);
+        option.innerHTML = obj[columns[1]];
+
+        select.appendChild(option);
+      }
+
+      return select;
+    }
+
+    function generateColumn() {
+      let table = document.getElementById("address");
+      console.log("table", table);
+      let thead = table.children[0];
+      let tr = thead.children[0];
+
+
+      let url = new URL(location.href);
+      let searchParams = new URLSearchParams(url.search);
+      let sortColumn = searchParams.get("sort") || '';
+
+
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+
+        let th = document.createElement("th");
+        th.innerHTML = addressModel.properties[column].alias;
+        th.setAttribute("scope", "col");
+
+        if (sortColumn && sortColumn.replace('-', '') === column) {
+          if (sortColumn.includes("-")) {
+            let icon = document.createElement('i');
+            icon.className = "fa fa-arrow-down";
+            th.appendChild(icon);
+          } else {
+            let icon = document.createElement('i');
+            icon.className = "fa fa-arrow-up";
+            th.appendChild(icon);
+          }
+        }
+
+        th.addEventListener("click", function () {
+          let url = new URL(location.href);
+          let searchParams = new URLSearchParams(url.search);
+
+          let sortColumn = searchParams.get("sort") || '';
+          if (sortColumn.includes("-")) {
+            url.searchParams.set("sort", column);
+          } else {
+            url.searchParams.set("sort", "-" + column);
+          }
+          location.href = url;
+        })
+        tr.appendChild(th);
+
+      }
+
+      th = document.createElement("th");
+      th.innerHTML = "Actions";
+      tr.appendChild(th);
+
+    }
+
+    document.getElementById('row_per_page').addEventListener('change', function (e) {
+      let url = new URL(location.href);
+      url.searchParams.set("pageSize", e.target.value);
+      url.searchParams.set("page", 1);
+      location.href = url;
+    });
+
+    function generateRows() {
+      let table = document.getElementById("address");
+      let tbody = table.children[1];
+
+      let url = new URL(location.href);
+      let searchParams = new URLSearchParams(url.search);
+
+      // search
+      let searchKey = searchParams.get("searchKey") || '';
+      document.getElementById("txtSearch").value = searchKey;
+      let arr = addresses;
+      if (searchKey) {
+        arr = addresses.filter(address => {
+          let values = Object.values(address);
+          for (let i = 0; i < values.length; i++) {
+            const val = removeVietnameseTones(values[i]).toLowerCase();
+            searchKey = removeVietnameseTones(searchKey).toLowerCase();
+            if (val.includes(searchKey)) return true;
+          }
+          return false;
+        })
+      }
+
+      let pageSize = searchParams.get("pageSize");
+      let currentPage = searchParams.get('page') ? searchParams.get('page') - 1 : 0;
+      pageSize = +pageSize || 10;
+      document.getElementById('row_per_page').value = pageSize;
+      let currentIndex = currentPage * pageSize;
+
+      let sortColumn = searchParams.get("sort") || '';
+      // tăng dần
+
+      if (sortColumn && !sortColumn.includes("-")) {
+        arr = arr.sort((a, b) => (a[sortColumn] > b[sortColumn]) ? 1 : ((b[sortColumn] > a[sortColumn]) ? -1 : -
+          1));
+      } else if (sortColumn) {
+        // giảm dần
+        arr = arr.sort((b, a) => (a[sortColumn] > b[sortColumn]) ? 1 : ((b[sortColumn] > a[sortColumn]) ? -1 : -
+          1));
+      }
+
+      // rows
+      for (let i = 0; i < arr.slice(currentIndex, currentIndex + pageSize).length; i++) {
+
+        const row = arr[currentIndex + i];
+
+        let tr = document.createElement("tr");
+        let th = document.createElement("th");
+        th.innerHTML = currentIndex + i + 1;
+        th.attributes["scope"] = "row";
+        tr.appendChild(th);
+        // column
+        for (let j = 0; j < columns.length; j++) {
+          const column = columns[j];
+          // TODO check column ref => get name
+          let cell = row[column];
+
+          if (addressModel.properties[column] !== undefined && addressModel.properties[column].$ref !==
+            undefined) {
+            // countries
+            let data = getData(column);
+            let dataModel = getDataModel(column);
+            let cColumns = Object.keys(dataModel.properties);
+            let obj = data.find(v => v[cColumns[0]] == cell);
+            console.log("cell", cell);
+            console.log("obj", obj);
+            if (obj) {
+              cell = obj[cColumns[1]];
+            } else {
+              cell = "";
+            }
+          }
+
+          let td = document.createElement("td");
+          td.innerHTML = cell;
+          tr.appendChild(td);
+        }
+
+        let actions = document.createElement("th");
+        // button edit
+        let button = document.createElement("button");
+        button.innerHTML = "Edit";
+        button.setAttribute("data-toggle", "modal");
+        button.setAttribute("data-target", "#exampleModal");
+        button.className = "btn btn-primary";
+        button.addEventListener("click", function () {
+          let idElement = document.getElementById("row_id");
+          idElement.innerHTML = currentIndex + i;
+
+          let flagElement = document.getElementById("flag");
+          flagElement.innerHTML = FLAGS.Update;
+
+          let btnSave = document.getElementById("save-change");
+          btnSave.innerHTML = "Update";
+          btnSave.className = "btn btn-primary";
+
+          initUpdateForm();
+
+        })
+        actions.appendChild(button);
+
+        // button delete
+        button = document.createElement("button");
+        button.innerHTML = "Xoa";
+        button.setAttribute("data-toggle", "modal");
+        button.setAttribute("data-target", "#exampleModal");
+        button.className = "btn btn-danger";
+        button.addEventListener("click", function () {
+          let idElement = document.getElementById("row_id");
+          let id = row[columns[0]]
+          idElement.innerHTML = id;
+
+          let flagElement = document.getElementById("flag");
+          flagElement.innerHTML = FLAGS.Remove;
+          let formData = document.getElementById("form_data");
+          formData.innerHTML = 'Confirm remove item';
+
+          let btnSave = document.getElementById("save-change");
+          btnSave.innerHTML = "Remove";
+          btnSave.className = "btn btn-danger";
+        })
+        actions.appendChild(button);
+
+        // 
+        tr.appendChild(actions);
+        tbody.appendChild(tr);
+      }
+    }
+
+    function initUpdateForm() {
+      let formData = document.getElementById("form_data");
+      formData.innerHTML = '';
+      for (let i = 0; i < columns.length; i++) {
+        const columnName = columns[i];
+        let row = document.getElementById("row_id").innerHTML;
+
+        let div = document.createElement('div');
+
+        let label = document.createElement("label");
+        label.innerHTML = columnName;
+        label.setAttribute("for", columnName);
+
+        div.appendChild(label);
+
+        if (addressModel.properties[columnName].$ref === undefined) {
+
+          let input = document.createElement("input");
+          input.className = "form-control";
+          input.value = addresses[row][columnName];
+          input.setAttribute("id", columnName);
+
+          div.appendChild(input);
+        } else {
+          let select = createSelect(columnName);
+          // TODO set value selected
+          select.value = addresses[row][columnName];
+
+          div.appendChild(select);
+        }
+
+        formData.appendChild(div);
+
+      }
+    }
+
+    function initCreateForm() {
+
+      let flagElement = document.getElementById("flag");
+      flagElement.innerHTML = FLAGS.Create;
+
+      let btnSave = document.getElementById("save-change");
+      btnSave.innerHTML = "Create";
+      btnSave.className = "btn btn-primary";
+
+      let formData = document.getElementById("form_data");
+      formData.innerHTML = '';
+      for (let i = 0; i < columns.length; i++) {
+        const columnName = columns[i];
+
+        let field = document.createElement('div');
+        let label = document.createElement("label");
+        label.innerHTML = addressModel.properties[columnName].alias;
+        label.setAttribute("for", columnName);
+
+        field.appendChild(label);
+        if (addressModel.properties[columnName].$ref === undefined) {
+
+          let input = document.createElement("input");
+          input.className = "form-control";
+          input.setAttribute("id", columnName);
+
+          field.appendChild(input);
+
+        } else {
+          let select = createSelect(columnName);
+          field.appendChild(select);
+        }
+
+        formData.appendChild(field);
+      }
+
+
+    }
+
+    function create() {
+
+
+      let obj = {};
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
+        if (addressModel.properties[column].required && !document.getElementById(column).value) {
+          alert(`${column} is required`);
+          return;
+        }
+        // Object[key] = value
+        obj[column] = document.getElementById(column).value;
+      }
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 2 && this.status == 201) {
+          addresses.push(obj);
+          document.getElementById("close_model").click();
+          generateRows();
+        }
+      };
+      xhttp.open("POST", `${hkm_api}/cleanStatus/create`, obj);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.setRequestHeader("site_id", "a8544b1e-d487-4984-bae7-1c24e1360e2e");
+      xhttp.send(JSON.stringify(obj));
+    }
+
+    function update() {
+
+      const row = document.getElementById("row_id").innerHTML;
+      let obj = addresses[row];
+      columns.forEach(column => {
+        obj[column] = document.getElementById(column).value;
+      });
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          // this.responseText;
+
+          // addresses.push(obj);
+          addresses[row] = obj;
+          document.getElementById("close_model").click();
+          generateRows();
+        }
+      };
+      xhttp.open("PUT", `${hkm_api}/cleanStatus/update/${obj.id}`, obj);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.setRequestHeader("site_id", "a8544b1e-d487-4984-bae7-1c24e1360e2e");
+      xhttp.send(JSON.stringify(obj));
+    }
+
+    function remove() {
+      var xhttp = new XMLHttpRequest();
+      const row = document.getElementById("row_id").innerHTML;
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          let index = addresses.findIndex(a => a.id === row);
+          addresses.splice(index, 1);
+          document.getElementById("close_model").click();
+          generateRows();
+        }
+      };
+      xhttp.open("DELETE", `${hkm_api}/cleanStatus/delete/${row}`, true);
+      xhttp.setRequestHeader("site_id", "a8544b1e-d487-4984-bae7-1c24e1360e2e");
+      xhttp.send();
+    }
+
+    function generateTable() {
+      generateColumn();
+      generateRows();
+    }
+
+    function save() {
+      // clear all tbody
+      document.getElementById("address").children[1].innerHTML = "";
+
+      let flag = +document.getElementById("flag").innerHTML;
+
+      switch (flag) {
+        case FLAGS.Create:
+          create();
+          break;
+        case FLAGS.Update:
+          update();
+          document.getElementById("close_model").click();
+          break;
+        case FLAGS.Remove:
+          remove();
+          break;
+        default:
+          break;
+      }
+
+
+    }
+
+    function initPaging() {
+
+      let url = new URL(location.href);
+      let searchParams = new URLSearchParams(url.search);
+      let pageSize = searchParams.get("pageSize") || 10;
+      let ul = document.querySelector(".pagination");
+      ul.innerHTML = "";
+      url.searchParams.set("pageSize", pageSize);
+
+      // search
+      let searchKey = searchParams.get("searchKey") || '';
+      document.getElementById("txtSearch").value = searchKey;
+
+      let arr = addresses;
+      if (searchKey) {
+
+        arr = addresses.filter(address => {
+          let values = Object.values(address);
+          for (let i = 0; i < values.length; i++) {
+            const val = removeVietnameseTones(values[i]);
+            searchKey = removeVietnameseTones(searchKey)
+            if (val.includes(searchKey)) return true;
+          }
+          return false;
+          // values.findIndex(v => v.search(key)) > -1;
+        })
+
+      }
+
+      // <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+      for (let i = 0; i < arr.length / pageSize; i++) {
+        let li = document.createElement("li");
+        li.className = 'page-item';
+
+        url.searchParams.set("page", i + 1);
+
+        let a = document.createElement('a');
+        a.className = 'page-link';
+        a.href = url;
+        a.innerHTML = i + 1;
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+    }
+
+    function search() {
+      // clear all tbody
+      document.getElementById("address").children[1].innerHTML = "";
+
+      let url = new URL(location.href);
+      let searchParams = new URLSearchParams(url.search);
+      let searchKey = document.getElementById("txtSearch").value;
+      // let searchKey = searchParams.get("searchKey");
+      url.searchParams.set("searchKey", searchKey);
+      location.href = url;
+
+    }
+
+    function removeVietnameseTones(str) {
+      if (!str) return '';
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+      str = str.replace(/đ/g, "d");
+      str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+      str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+      str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+      str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+      str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+      str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+      str = str.replace(/Đ/g, "D");
+      // Some system encode vietnamese combining accent as individual utf-8 characters
+      // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+      str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+      str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+      // Remove extra spaces
+      // Bỏ các khoảng trắng liền nhau
+      str = str.replace(/ + /g, " ");
+      str = str.trim();
+      // Remove punctuations
+      // Bỏ dấu câu, kí tự đặc biệt
+      str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+        " ");
+      return str;
+    }
+
+    fetchData();
+    // initPaging();
+    // generateTable();
+
+  </script>
+</body>
+
+</html>

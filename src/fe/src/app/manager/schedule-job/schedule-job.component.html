@@ -1,0 +1,172 @@
+<p></p>
+<div>
+
+  <div class="filter-bar inline">
+    <mat-form-field class="ml-1 choosea" appearance="fill">
+      <mat-label>Khách sạn</mat-label>
+      <mat-select [(value)]="hotelId" (selectionChange)="loadFloors()">
+        <mat-option *ngFor="let food of hotels" [value]="food.id">
+          {{food.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="ml-1 choose" appearance="fill">
+      <mat-label>Tầng</mat-label>
+      <mat-select [(value)]="floorsId" (selectionChange)="loadRooms( )">
+        <mat-option *ngFor="let food of floors" [value]="food.id">
+          {{food.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="ml-1 chooseb" appearance="fill">
+      <mat-label>Trạng thái phòng</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let food of roomStatuses" [value]="food.id">
+          {{food.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field class="ml-1 choosec" appearance="fill">
+      <mat-label>Trạng thái dọn dẹp</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let food of checkStatuses" [value]="food.id">
+          {{food.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field class="ml-1 choosed" appearance="fill">
+      <mat-label>Trạng thái kiểm tra</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let food of checkStatuses" [value]="food.id">
+          {{food.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class=" ml-1 example-full-width">
+      <mat-label>Tìm kiếm</mat-label>
+      <input matInput value="">
+    </mat-form-field>
+
+  </div>
+
+  <div style="display: flex;" class="ml-4 mb-3">
+    <button mat-raised-button small (click)="today()">
+      Hôm nay
+    </button>
+    <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" (click)="preDate()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button aria-label="Example icon button with a vertical three dot icon" (click)="nextDate()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <h2> {{cleanDate | date: 'dd/MM/yyyy'}}</h2>
+  </div>
+
+
+  <div class="list-clean">
+    <mat-card class="example-card" *ngFor="let room of rooms">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title class="text">{{room.name}} - <small>{{room.room_type?.name}}</small> </mat-card-title>
+        <mat-card-subtitle>{{room.floors?.name}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list>
+          <!-- // room status -->
+          <mat-list-item>
+            <div class="mat-line">
+              <button mat-button [matMenuTriggerFor]="menuRoomStatus">
+                <mat-icon [style.color]="room.room_status?.color">account_circle</mat-icon>
+              </button>
+              <mat-menu #menuRoomStatus="matMenu">
+                <div *ngIf="roomStatuses">
+                  <button mat-menu-item *ngFor="let status of roomStatuses" (click)="changeRoomStatus(room, status)">
+                    <mat-icon [style.color]="status.color">account_circle</mat-icon> {{status.name}}
+                  </button>
+                </div>
+              </mat-menu>
+              <button mat-button [matMenuTriggerFor]="menuCustomer">
+                {{room.bookeds && room.bookeds[0]?.customer?.name }}
+                <mat-icon *ngIf="!room.bookeds || !room.bookeds[0]?.customer?.name">person_search</mat-icon>
+              </button>
+              <mat-menu #menuCustomer="matMenu">
+                <div *ngIf="customers">
+                  <button mat-menu-item *ngFor="let customer of customers" (click)="changeCustomer(room, customer)">
+                    {{customer.name}}
+                  </button>
+                </div>
+              </mat-menu>
+            </div>
+          </mat-list-item>
+
+          <mat-list-item>
+            <div class="mat-line">
+              <button mat-button [matMenuTriggerFor]="menuCleanStatus">
+                <mat-icon [style.color]="room.clean_status?.color">cleaning_services</mat-icon>
+              </button>
+              <mat-menu #menuCleanStatus="matMenu">
+                <div *ngIf="cleanStatuses">
+                  <button mat-menu-item *ngFor="let status of cleanStatuses" (click)="changeCleanStatus(room, status)">
+                    <mat-icon [style.color]="status.color">cleaning_services</mat-icon> {{status.name}}
+                  </button>
+                </div>
+              </mat-menu>
+              <button mat-button [matMenuTriggerFor]="menuCleaner">
+                {{room.assignments && room.assignments[0]?.employee?.name}}
+                <mat-icon *ngIf="!room.assignments || !room.assignments[0]?.employee?.name">person_search</mat-icon>
+              </button>
+              <mat-menu #menuCleaner="matMenu">
+                <div *ngIf="users">
+                  <button mat-menu-item *ngFor="let user of users" (click)="changeEmployee(room, user)">
+                    {{user.name}}
+                  </button>
+                </div>
+              </mat-menu>
+            </div>
+          </mat-list-item>
+
+          <mat-list-item>
+            <div class="mat-line">
+              <button mat-button [matMenuTriggerFor]="menuCheckStatus">
+                <mat-icon [style.color]="room.check_status?.color">done_all</mat-icon>
+              </button>
+              <mat-menu #menuCheckStatus="matMenu">
+                <div *ngIf="checkStatuses">
+                  <button mat-menu-item *ngFor="let status of checkStatuses" (click)="changeCheckStatus(room, status)">
+                    <mat-icon [style.color]="status.color">done_all</mat-icon>{{status.name}}
+                  </button>
+                </div>
+
+              </mat-menu>
+              <button mat-button [matMenuTriggerFor]="menuChecker">
+                {{room.assignments && room.assignment?.supervisor?.name}}
+                <mat-icon *ngIf="!room.assignments || !room.assignment?.supervisor?.name">person_search</mat-icon>
+              </button>
+              <mat-menu #menuChecker="matMenu">
+                <div *ngIf="users">
+                  <button mat-menu-item *ngFor="let user of users" (click)="changeSuppervisor(room, user)">
+                    {{user.name}}
+                  </button>
+                </div>
+              </mat-menu>
+            </div>
+          </mat-list-item>
+          <mat-list-item end>
+            <a *ngIf="room.assignment && room.assignment.id"
+              [routerLink]="['/manager/clean-detail', room.assignment.id]">
+              <mat-icon>list</mat-icon>
+            </a>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

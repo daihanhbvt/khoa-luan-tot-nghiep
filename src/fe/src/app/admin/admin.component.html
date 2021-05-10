@@ -1,0 +1,60 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <div class="twoButton">
+      <button mat-button class="bgr-title">Admin</button>
+      <button mat-button> <a class="bgr-title2" [routerLink]="['/manager/schedule-job']">Manager</a></button>
+    </div>
+    <span class="example-spacer"></span>
+    <span [routerLink]="['/landing']">HouseKeeping</span>
+    <span class="example-spacer"></span>
+    <button mat-button> {{user.name}}</button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="inline">
+  <div class="sidebar">
+    <div class="mat-list">
+      <div class="mat-list-item" [routerLink]="['/admin/hotel']" [routerLinkActive]="['is-active']">Khách sạn
+      </div>
+      <div class="mat-list-item" [routerLink]="['/admin/user']" [routerLinkActive]="['is-active']">
+        Nhân viên
+      </div>
+      <div class="mat-list-item" [routerLink]="['/admin/customer']" [routerLinkActive]="['is-active']"> Khách hàng
+      </div>
+      <!-- <div class="mat-list-item"> </div> -->
+      <div class="mat-list-item">
+        <div (click)="isShowCategoryMenu = !isShowCategoryMenu" style="display: flex; cursor: pointer;">
+          <span class="style-slect-options"> Danh mục </span>
+          <div [hidden]="!isShowCategoryMenu">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">keyboard_arrow_up
+            </mat-icon>
+          </div>
+          <div [hidden]="isShowCategoryMenu">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">keyboard_arrow_down
+            </mat-icon>
+          </div>
+        </div>
+        <div *ngIf="isShowCategoryMenu">
+          <div class="mat-list">
+            <div class="mat-list-item" [routerLink]="['/admin/room-status']" [routerLinkActive]="['is-active']"> Trạng
+              thái phòng </div>
+            <div class="mat-list-item" [routerLink]="['/admin/room-type']" [routerLinkActive]="['is-active']"> Loại
+              phòng </div>
+            <div class="mat-list-item" [routerLink]="['/admin/clean-status']" [routerLinkActive]="['is-active']">
+              Trạng thái dọn dẹp </div>
+            <div class="mat-list-item" [routerLink]="['/admin/check-status']" [routerLinkActive]="['is-active']">
+              Trạng thái kiểm tra </div>
+            <div class="mat-list-item" [routerLink]="['/admin/check-list-template']" [routerLinkActive]="['is-active']">
+              Danh sách công việc </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-100">
+    <router-outlet></router-outlet>
+  </div>
+</div>

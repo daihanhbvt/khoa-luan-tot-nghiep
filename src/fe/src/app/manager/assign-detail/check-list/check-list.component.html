@@ -1,0 +1,13 @@
+<p class="ml-5">Nhân viên {{isClean ? 'dọn dẹp' : 'kiểm tra' }}:
+  {{isClean ? assignment.employee.name : assignment.supervisor.name}}</p>
+<section class="example-section">
+  <span class="example-list-section">
+    <ul>
+      <li *ngFor="let subtask of checkListItems">
+        <mat-checkbox [(ngModel)]="subtask.completed" [color]="subtask.color" (ngModelChange)="updateAllComplete()">
+          {{subtask.name}}
+        </mat-checkbox>
+      </li>
+    </ul>
+  </span>
+</section>

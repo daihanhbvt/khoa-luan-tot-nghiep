@@ -1,0 +1,25 @@
+<h2 style="text-align: center;">Chi tiết công việc</h2>
+<div style="display: flex;">
+  <div *ngIf="assignment && assignment.room && assignment.floors">
+    <h3 class="ml-5">{{assignment.room.name}} - {{assignment.floors.name}}
+    </h3>
+  </div>
+
+  <h3 class="ml-5" *ngIf="assignment && assignment.clean_date">Ngày phân công: {{assignment.clean_date | date :
+    'dd/MM/yyyy HH:mm'}}
+  </h3>
+  <h3 class="ml-5" *ngIf="assignment && assignment.last_updated_by">Người phân công: {{assignment.last_updated_by.name}}
+  </h3>
+</div>
+<div *ngIf="assignment &&  assignment.checklist_template">{{assignment.checklist_template.name}}</div>
+<div class="row">
+  <div class="col-md-6">
+    <app-manager-cd-check-list [assignment]="assignment" [isClean]="true"></app-manager-cd-check-list>
+  </div>
+  <div class="col-md-6">
+    <app-manager-cd-check-list [assignment]="assignment" [isClean]="false"></app-manager-cd-check-list>
+  </div>
+</div>
+<div>
+  <app-manager-cd-comments></app-manager-cd-comments>
+</div>

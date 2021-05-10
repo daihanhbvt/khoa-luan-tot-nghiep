@@ -1,0 +1,52 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>HouseKeeping</span>
+    <button mat-button>SuperAdmin</button>
+    <span class="example-spacer"></span>
+    <button mat-button>Võ Tây</button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </mat-toolbar-row>
+
+</mat-toolbar>
+<div class="inline">
+  <div class="sidebar">
+    <div class="mat-list">
+      <div class="mat-list-item"> <a [routerLink]="['/sadmin/hotels']"> Khách sạn </a> </div>
+      <div class="mat-list-item"><a [routerLink]="['/sadmin/user']"> Nhân viên </a>
+      </div>
+      <!-- <div class="mat-list-item"> </div> -->
+      <div class="mat-list-item">
+        <div (click)="isShowCategoryMenu = !isShowCategoryMenu" style="display: flex; cursor: pointer;">
+          <div [hidden]="!isShowCategoryMenu">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">keyboard_arrow_up
+            </mat-icon>
+          </div>
+          <div [hidden]="isShowCategoryMenu">
+            <mat-icon aria-hidden="false" aria-label="Example home icon">keyboard_arrow_down
+            </mat-icon>
+          </div>
+          Mẫu
+        </div>
+        <div *ngIf="isShowCategoryMenu">
+          <div class="mat-list">
+            <div class="mat-list-item"> <a [routerLink]="['/sadmin/template-management/room-status']"> Trạng thái phòng
+              </a> </div>
+            <div class="mat-list-item"> <a [routerLink]="['/sadmin/template-management/room-type']"> Loại phòng </a>
+            </div>
+            <div class="mat-list-item"> <a [routerLink]="['/sadmin/template-management/clean-status']"> Trạng thái dọn
+                dẹp </a> </div>
+            <div class="mat-list-item"> <a [routerLink]="['/sadmin/template-management/check-status']"> Trạng thái kiểm
+                tra </a> </div>
+            <div class="mat-list-item"> <a [routerLink]="['/sadmin/template-management/check-list-template-default']">
+                Mẫu danh sách kiểm tra tự động </a> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-100">
+    <router-outlet></router-outlet>
+  </div>
+</div>
